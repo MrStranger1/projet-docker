@@ -38,26 +38,20 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
-#front
+
 frontend http
     bind *:80
     mode http
     option httplog
-    acl nom_acl hdr(host) notresite.com
-    use_backend nom_backend if  nom_acl
-#addfr
+    acl fleuriste_acl hdr(host) fleuristes-et-fleurs.com
+    use_backend fleuriste_backend if  fleuriste_acl
 
-#back
-backend nom_backend
+
+
+backend fleuriste_backend
     mode http
     option httpchk
     option forwardfor except 127.0.0.1
     http-request add-header X-Forwarded-Proto https if { ssl_fc }
-    server nom_serveur 192.168.1.12:80 maxconn 32backend mon-site_http 
-
- backend mon-sitetrois_http
-        mode http
-        option httpchk
-        option forwardfor except 127.0.0.1
-        http-request add-header X-Forwarded-Proto https if { ssl_fc } 
-		server mon-srv-trois 147.25.68.45:4566 maxconn 22 
+    server fleuriste_serveur_1 172.17.0.20:80 maxconn 32 check
+    server fleuriste_serveur_2 172.17.0.40:80 maxconn 32 check
